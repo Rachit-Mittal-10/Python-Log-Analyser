@@ -95,7 +95,10 @@ def main():
     task2 = countPathAndPrintMaxRequestedPath(array_dicts)
     print(f"{task2[0]}\t\t\t{task2[1]}")
     print("Task-3")
+    print("Suspicious Activity Detected")
     answer_dict = detectSuspiciousActivity(array_dicts)
-    print(answer_dict)
+    print("IP Adress\t\t\tFailed Attempt")
+    for key in answer_dict:
+        print(f"{key}\t\t\t{answer_dict[key]}")
 
 main()
