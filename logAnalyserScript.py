@@ -79,6 +79,7 @@ def detectSuspiciousActivity(array_dicts, login_threshold=10):
         status = df.iloc[index].iloc[-3]
         if ip not in return_dict and status == "401":
             return_dict[ip] = 1
+            continue
         if ip in return_dict and status == "401":
             return_dict[ip] += 1
     return return_dict 
