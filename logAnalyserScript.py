@@ -26,7 +26,6 @@ def readFileAndGetArray(filePath):
         lines = File.readlines()
         for line in lines:
             array_dicts.append(extractFromLine(line,pattern_object))
-    print(f"Size of Array: {getsizeof(array_dicts)}")
     return array_dicts
 
 def getDF(array_dicts):
@@ -40,10 +39,8 @@ def countRequestPerIP(array_dicts):
         This function will print the count the requests per IP
     """
     df = getDF(array_dicts)
-    print(f"Size of DF: {getsizeof(df)}")
-    print("Task1: Count Request per ip")
-    print(df.groupby(by="ip").size().reset_index(name="count").sort_values(by="count",ascending=False))
-    print()
+    grouped_df = df.groupby(by="ip").size().reset_index(name="count").sort_values(by="count",ascending=False)
+    return grouped_df
 
 def countPathAndPrintMaxRequestedPath(array_dicts):
     """
@@ -54,13 +51,13 @@ def countPathAndPrintMaxRequestedPath(array_dicts):
     grouped_df = df.groupby(by="path").size()
     index = grouped_df.idxmax()
     value = grouped_df[index]
-    print(f"Most Accessed Endpoint is {index} for {value} times")
-    print()
+    return (index, value)
 
 def detectFailedLogin(array_dicts):
     """
         This functioln will detect the failed login attempts.
     """
+    df = getDF(array_dicts)
 
     pass
 
@@ -70,19 +67,38 @@ def flagIP(array_dicts, login_threshold=10):
     """
     pass
 
-def detectSuspiciousActivity(array_dicts):
+def detectSuspiciousActivity(array_dicts, login_threshold=10):
     """
         This function will detect suspicious activity and print it.
     """
-    detectFailedLogin(array_dicts)
-    flagIP(array_dicts)
+    df = getDF(array_dicts)
+    length = len(df)
+    return_dict = {}
+    for index in range(length):
+        ip = df.iloc[index].iloc[0]
+        status = df.iloc[index].iloc[-3]
+        if ip not in return_dict and status == "401":
+            return_dict[ip] = 1
+            continue
+        if ip in return_dict and status == "401":
+            return_dict[ip] += 1
+    return return_dict 
 
 def main():
     LOG_FILE_PATH = "./sample.log"
     array_dicts = readFileAndGetArray(LOG_FILE_PATH)
-    countRequestPerIP(array_dicts)
-    countPathAndPrintMaxRequestedPath(array_dicts)
-    detectSuspiciousActivity(array_dicts)
-
+    print("Task-1")
+    task1 = countRequestPerIP(array_dicts)
+    print(task1)
+    print("Task-2")
+    print("Most Frequently Accessed Endpoints")
+    task2 = countPathAndPrintMaxRequestedPath(array_dicts)
+    print(f"{task2[0]}\t\t\t{task2[1]}")
+    print("Task-3")
+    print("Suspicious Activity Detected")
+    answer_dict = detectSuspiciousActivity(array_dicts)
+    print("IP Adress\t\t\tFailed Attempt")
+    for key in answer_dict:
+        print(f"{key}\t\t\t{answer_dict[key]}")
 
 main()
