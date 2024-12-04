@@ -47,25 +47,10 @@ def countPathAndPrintMaxRequestedPath(array_dicts):
         This function will print the maximum accessed path
     """
     df = getDF(array_dicts)
-    print("Task2: Print the Maximum Accessed Endpoint")
     grouped_df = df.groupby(by="path").size()
     index = grouped_df.idxmax()
     value = grouped_df[index]
     return (index, value)
-
-def detectFailedLogin(array_dicts):
-    """
-        This functioln will detect the failed login attempts.
-    """
-    df = getDF(array_dicts)
-
-    pass
-
-def flagIP(array_dicts, login_threshold=10):
-    """
-        This function will flg the IP with login more than threshold.
-    """
-    pass
 
 def detectSuspiciousActivity(array_dicts, login_threshold=10):
     """
@@ -84,21 +69,25 @@ def detectSuspiciousActivity(array_dicts, login_threshold=10):
             return_dict[ip] += 1
     return return_dict 
 
+
+# main function
 def main():
     LOG_FILE_PATH = "./sample.log"
     array_dicts = readFileAndGetArray(LOG_FILE_PATH)
     print("Task-1")
     task1 = countRequestPerIP(array_dicts)
     print(task1)
+    print()
     print("Task-2")
     print("Most Frequently Accessed Endpoints")
     task2 = countPathAndPrintMaxRequestedPath(array_dicts)
-    print(f"{task2[0]}\t\t\t{task2[1]}")
+    print(f"{task2[0]}\t\t(Accessed {task2[1]} times)")
+    print()
     print("Task-3")
     print("Suspicious Activity Detected")
     answer_dict = detectSuspiciousActivity(array_dicts)
     print("IP Adress\t\t\tFailed Attempt")
     for key in answer_dict:
         print(f"{key}\t\t\t{answer_dict[key]}")
-
+    print()
 main()
