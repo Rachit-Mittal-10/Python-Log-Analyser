@@ -8,7 +8,7 @@ def makePatterObject():
     """
         This will return the Pattern Object
     """
-    pattern = r"^(?P<ip>[\d\.]+) - - \[(?P<datetimestamp>[^\]]+)\] \"(?P<method>[A-Z]+) (?P<path>[^\s]+) (?P<http_version>[^\"]+)\" (?P<status>[\d]+) (?P<size>[\d]+)"
+    pattern = r"(?P<ip>[\d\.]+) - - \[(?P<datetimestamp>[^\]]+)\] \"(?P<method>[A-Z]+) (?P<path>[^\s]+) (?P<http_version>[^\"]+)\" (?P<status>[\d]+) (?P<size>[\d]+)(?: \"(?P<message>.*?)\")?"
     obj = re.compile(pattern)
     return obj
 
