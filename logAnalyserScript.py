@@ -78,7 +78,10 @@ def detectSuspiciousActivity(array_dicts, login_threshold=10):
 
 # main function
 def logAnalyser(LOG_FILE_PATH):
+    # This will read the file and get the array of lines
     array_dicts = readFileAndGetArray(LOG_FILE_PATH)
+    
+    # Following block of code processes the log file
     print("Task-1")
     task1 = countRequestPerIP(array_dicts)
     print(task1)
@@ -92,6 +95,8 @@ def logAnalyser(LOG_FILE_PATH):
     print("Suspicious Activity Detected")
     task3 = detectSuspiciousActivity(array_dicts)
     print(task3)
+    
+    # This will write to file
     base_name = os.path.basename(LOG_FILE_PATH)
     with open(f"./LogAnalyserResult-{base_name}-{datetime.now()}.csv","w") as Writer:
         Writer.write("Requests per ip\n")
@@ -106,8 +111,11 @@ def logAnalyser(LOG_FILE_PATH):
     return
 
 if __name__ == "__main__":
+    # Get the arguments
     arguments = sys.argv
+    # Check if file path is given
     if(len(arguments) <= 1):
         sys.exit("File Required")
+    # If given then run the loop
     for arg in arguments[1:]:
         logAnalyser(arg)
