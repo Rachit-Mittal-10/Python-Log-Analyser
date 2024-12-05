@@ -1,8 +1,7 @@
 # Importing the neccessary libraries
 import re
 import pandas as pd
-from sys import getsizeof
-
+import sys
 
 def makePatternObject():
     """
@@ -65,8 +64,8 @@ def detectSuspiciousActivity(array_dicts, login_threshold=10):
     length = len(df)
     return_dict = {}
     for index in range(length):
-        ip = df.iloc[index].iloc[0]
-        status = df.iloc[index].iloc[-3]
+        ip = df.iloc[index]["ip"]
+        status = df.iloc[index]["status"]
         if ip not in return_dict and status == "401":
             return_dict[ip] = 1
             continue
@@ -76,8 +75,7 @@ def detectSuspiciousActivity(array_dicts, login_threshold=10):
 
 
 # main function
-def main():
-    LOG_FILE_PATH = "./sample.log"
+def logAnalyser(LOG_FILE_PATH):
     array_dicts = readFileAndGetArray(LOG_FILE_PATH)
     print("Task-1")
     task1 = countRequestPerIP(array_dicts)
@@ -96,8 +94,18 @@ def main():
     with open("./LogAnalyserResult.csv","w") as Writer:
         Writer.write("Requests per ip\n")
         task1.to_csv(Writer, index=False)
-        Writer.write("\nMost Accessed End Point\n")
+        Writer.write("\n")
+        Writer.write("Most Accessed End Point\n")
         task2.to_csv(Writer,index=False)
-        Writer.write("\nSuspicious Activity\n")
+        Writer.write("\n")
+        Writer.write("Suspicious Activity\n")
         task3.to_csv(Writer,index=False)
-main()
+        Writer.write("\n")
+    return
+
+if __name__ == "__main__":
+    arguments = sys.argv
+    if(len(arguments) == 0):
+        sys.exit("File Required")
+    for arg in arguments[1:]:
+        logAnalyser(arg)
