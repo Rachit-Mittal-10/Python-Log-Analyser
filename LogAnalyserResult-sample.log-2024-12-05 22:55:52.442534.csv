@@ -1,0 +1,17 @@
+Requests per ip
+IP Address,Request Count
+203.0.113.5,4808
+198.51.100.23,4808
+192.168.1.1,3609
+10.0.0.2,3606
+192.168.1.100,3005
+
+Most Accessed End Point
+End Point,Access Count
+/login,7813
+
+Suspicious Activity
+IP Address,Failed Login Count
+203.0.113.5,4808
+192.168.1.100,3005
+

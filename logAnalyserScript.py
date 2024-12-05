@@ -2,6 +2,8 @@
 import re
 import pandas as pd
 import sys
+from datetime import datetime
+import os
 
 def makePatternObject():
     """
@@ -90,8 +92,8 @@ def logAnalyser(LOG_FILE_PATH):
     print("Suspicious Activity Detected")
     task3 = detectSuspiciousActivity(array_dicts)
     print(task3)
-
-    with open("./LogAnalyserResult.csv","w") as Writer:
+    base_name = os.path.basename(LOG_FILE_PATH)
+    with open(f"./LogAnalyserResult-{base_name}-{datetime.now()}.csv","w") as Writer:
         Writer.write("Requests per ip\n")
         task1.to_csv(Writer, index=False)
         Writer.write("\n")
@@ -105,7 +107,7 @@ def logAnalyser(LOG_FILE_PATH):
 
 if __name__ == "__main__":
     arguments = sys.argv
-    if(len(arguments) == 0):
+    if(len(arguments) <= 1):
         sys.exit("File Required")
     for arg in arguments[1:]:
         logAnalyser(arg)
