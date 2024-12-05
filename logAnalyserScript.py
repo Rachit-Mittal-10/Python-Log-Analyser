@@ -4,7 +4,7 @@ import pandas as pd
 from sys import getsizeof
 
 
-def makePatterObject():
+def makePatternObject():
     """
         This will return the Pattern Object
     """
@@ -20,7 +20,7 @@ def extractFromLine(line,pattern):
     return match.groupdict()
 
 def readFileAndGetArray(filePath):
-    pattern_object = makePatterObject()
+    pattern_object = makePatternObject()
     array_dicts = []
     with open(filePath, mode="r") as File:
         lines = File.readlines()
@@ -40,6 +40,7 @@ def countRequestPerIP(array_dicts):
     """
     df = getDF(array_dicts)
     grouped_df = df.groupby(by="ip").size().reset_index(name="count").sort_values(by="count",ascending=False)
+    grouped_df.columns = ["IP Address", "Request Count"]
     return grouped_df
 
 def countPathAndPrintMaxRequestedPath(array_dicts):
@@ -50,7 +51,11 @@ def countPathAndPrintMaxRequestedPath(array_dicts):
     grouped_df = df.groupby(by="path").size()
     index = grouped_df.idxmax()
     value = grouped_df[index]
-    return (index, value)
+    return pd.DataFrame({
+        "End Point": [index],
+        "Access Count": [value]
+    },)
+    # return (index, value)
 
 def detectSuspiciousActivity(array_dicts, login_threshold=10):
     """
@@ -67,7 +72,7 @@ def detectSuspiciousActivity(array_dicts, login_threshold=10):
             continue
         if ip in return_dict and status == "401":
             return_dict[ip] += 1
-    return return_dict 
+    return pd.DataFrame(list(return_dict.items()),columns=["IP Address", "Failed Login Count"])
 
 
 # main function
@@ -81,13 +86,18 @@ def main():
     print("Task-2")
     print("Most Frequently Accessed Endpoints")
     task2 = countPathAndPrintMaxRequestedPath(array_dicts)
-    print(f"{task2[0]}\t\t(Accessed {task2[1]} times)")
+    print(task2)
     print()
     print("Task-3")
     print("Suspicious Activity Detected")
-    answer_dict = detectSuspiciousActivity(array_dicts)
-    print("IP Adress\t\t\tFailed Attempt")
-    for key in answer_dict:
-        print(f"{key}\t\t\t{answer_dict[key]}")
-    print()
+    task3 = detectSuspiciousActivity(array_dicts)
+    print(task3)
+
+    with open("./LogAnalyserResult.csv","w") as Writer:
+        Writer.write("Requests per ip\n")
+        task1.to_csv(Writer, index=False)
+        Writer.write("\nMost Accessed End Point\n")
+        task2.to_csv(Writer,index=False)
+        Writer.write("\nSuspicious Activity\n")
+        task3.to_csv(Writer,index=False)
 main()
