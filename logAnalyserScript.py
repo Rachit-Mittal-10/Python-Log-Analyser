@@ -130,4 +130,7 @@ if __name__ == "__main__":
         sys.exit("File Required")
     # If given then run the loop
     for arg in arguments[1:]:
+        if not os.path.exists(arg):
+            print(f"{arg} not exist")
+            continue
         LogAnalyser(arg).logAnalyser()
