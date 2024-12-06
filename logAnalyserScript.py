@@ -7,7 +7,10 @@ import os
 
 
 class LogAnalyser:
-    
+    """
+        This is the class that encapsulates the all the related methods
+    """
+
     def __init__(self, log_file_path):
         self._pattern_object = self._makePatternObject()
         self._LOG_FILE_PATH = log_file_path
@@ -88,7 +91,9 @@ class LogAnalyser:
 
     # main function
     def logAnalyser(self):
-        # Following block of code processes the log file
+        """
+            This will analyse the log file and write output to terminal and file.
+        """
         print("Task-1")
         task1 = self._countRequestPerIP()
         print(task1)
