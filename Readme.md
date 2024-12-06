@@ -28,10 +28,10 @@ pip install -r Requirements.txt
 
 For Linux
 ```
-    python3 logAnalyserScript
+    python3 logAnalyserScript.py [file names]
 ```
 
 For Windows
 ```
-    python logAnalsyerScript
+    python logAnalsyerScript.py [file names]
 ```
