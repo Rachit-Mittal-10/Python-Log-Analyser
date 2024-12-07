@@ -4,7 +4,7 @@ import pandas as pd
 import sys
 from datetime import datetime
 import os
-
+from tqdm import tqdm
 
 class LogAnalyser:
     """
@@ -76,18 +76,12 @@ class LogAnalyser:
             This function will detect suspicious activity and print it.
         """
         df = self._df
-        length = len(df)
-        return_dict = {}
-        for index in range(length):
-            ip = df.iloc[index]["ip"]
-            status = df.iloc[index]["status"]
-            if ip not in return_dict and status == "401":
-                return_dict[ip] = 1
-                continue
-            if ip in return_dict and status == "401":
-                return_dict[ip] += 1
-        return pd.DataFrame(list(return_dict.items()),columns=["IP Address", "Failed Login Count"])
-
+        df = df[df["status"] == "401"]
+        grouped_df = df.groupby("ip").size().reset_index(name="Failed Login Attempts")
+        grouped_df = grouped_df[grouped_df["Failed Login Attempts"] >= login_threshold]
+        # print(grouped_df)
+        grouped_df.rename(columns={"ip":"IP Address"}, inplace=True)
+        return grouped_df
 
     # main function
     def logAnalyser(self):
